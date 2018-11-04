@@ -146,4 +146,15 @@
 				(add1 counter))))
   (fib-iter 2 1 0 0))
 
+;; 1.12
+
+;; recursion
+
+(define (pascal row col)
+  (cond
+	[(> col row) (error "unvalid")]
+	[(or (= col 0)(= row col)) 1]
+	[else (+ (pascal (- row 1) (- col 1))
+			 (pascal (- row 1) col))]))
+
 
