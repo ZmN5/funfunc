@@ -158,3 +158,29 @@
 			 (pascal (- row 1) col))]))
 
 
+
+;; 1.16
+;; fast expt
+
+;; recursion
+(define (even? n)
+  (= 0 
+	 (remainder n 2)))
+
+(define (fast-expt num n)
+  (cond
+	[(= n 0) 1]
+	[(even? n) (square (fast-expt num
+								  (/ n 2)))]
+	[else (* num
+			 (fast-expt num (sub1 n)))]))
+
+;; iteration
+
+(define (fast-expt2 num n)
+  (define (fast-expt-iter num n a)
+	(if (= n 0)
+	  a
+	  (if (even? n) (fast-expt-iter (* num num) (/ n 2) a)
+		(fast-expt-iter num (sub1 n ) (* num a)))))
+  (fast-expt-iter num n 1))
