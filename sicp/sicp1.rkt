@@ -124,3 +124,26 @@
 	[(= kinds-of-coins 4) 25] 
 	[(= kinds-of-coins 5) 50]))
 
+;; 1.11
+
+;; recursion
+(define (fibona3-recur n)
+  (if (< n 3) 
+	n
+	(+ (fibona3-recur (- n 1))
+	   (* 2 (fibona3-recur (- n 2)))
+	   (* 3 (fibona3-recur (- n 3))))))
+
+;; iteration
+
+(define (fibona3-iter n)
+  (define (fib-iter a b c counter)
+	(if (= counter n)
+	  c
+	  (fib-iter (+ a (* 2 b) (* 3 c))
+				a 
+				b
+				(add1 counter))))
+  (fib-iter 2 1 0 0))
+
+
