@@ -197,6 +197,8 @@
     [else (+ a
              (multi a (sub1 b)))]))
 
+;; 1.18
+
 (define (fast-multi a b)
   (define (multi-iter a b result)
     (cond
