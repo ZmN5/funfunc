@@ -232,3 +232,18 @@
       [(divides? n i) i]
       [else (find-dividor (add1 i))]))
   (= n (find-dividor 2)))
+
+;; 1.23
+
+(define (next-num i)
+  (if (even? i)
+      (+ i 1)
+      (+ i 2)))
+
+(define (prime2? n)
+  (define (find-dividor i)
+    (cond
+      [(> (square i) n) n]
+      [(divides? n i) i]
+      [else (find-dividor (next-num i))]))
+  (= n (find-dividor 2)))
