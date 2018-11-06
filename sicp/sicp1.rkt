@@ -219,3 +219,16 @@
       a
       (gcd b
            (remainder a b))))
+
+;; find prime
+
+(define (divides? a b)
+  (= 0 (remainder a b)))
+
+(define (prime? n)
+  (define (find-dividor i)
+    (cond
+      [(> (square i) n) n]
+      [(divides? n i) i]
+      [else (find-dividor (add1 i))]))
+  (= n (find-dividor 2)))
