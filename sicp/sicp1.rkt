@@ -210,3 +210,12 @@
                         (sub1 b)
                         (+ result a))]))
   (multi-iter a b 0))
+
+
+;; gcd
+
+(define (gcd a b)
+  (if (= b 0)
+      a
+      (gcd b
+           (remainder a b))))
