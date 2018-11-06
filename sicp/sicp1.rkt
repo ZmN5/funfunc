@@ -184,3 +184,27 @@
 	  (if (even? n) (fast-expt-iter (* num num) (/ n 2) a)
 		(fast-expt-iter num (sub1 n ) (* num a)))))
   (fast-expt-iter num n 1))
+
+;; 1.17 multi
+
+(define (multi2 x)
+  (+ x x))
+
+(define (multi a b)
+  (cond
+    [(= b 0) 0]
+    [(even? b) (multi2 (multi a (/ b 2)))]
+    [else (+ a
+             (multi a (sub1 b)))]))
+
+(define (fast-multi a b)
+  (define (multi-iter a b result)
+    (cond
+      [(= b 0) result]
+      [(even? b) (multi-iter (multi2 a)
+                             (/ b 2)
+                             result)]
+      [else (multi-iter a
+                        (sub1 b)
+                        (+ result a))]))
+  (multi-iter a b 0))
