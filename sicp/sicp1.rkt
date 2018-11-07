@@ -106,6 +106,15 @@
         (fib-iter b (+ a b) (sub1 counter))))
   (fib-iter 0 1 n))
 
+(define (fib3 n)
+  (let fib-iter ([a 0]
+                 [b 1]
+                 [counter n])
+    (if (= 0 counter)
+        b
+        (fib-iter b (+ a b) (sub1 counter)))))
+
+
 ;; count change
 (define (count-change amount)
   (cc amount 5))
