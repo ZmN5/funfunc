@@ -20,6 +20,61 @@
      (set! saved-k k)
      0)))
 
+
+;; https://www.scheme.com/tspl4/further.html#./further:h0
+
+;; break
+
+(define multi
+  (lambda (ls)
+    (call/cc
+     (lambda (break)
+       (let f ([ls ls])
+         (cond
+           [(null? ls) 1]
+           [(zero? (car ls)) (break 0)]
+           [else (* (car ls)
+                    (f (cdr ls)))]))))))
+
+;; factorial
+
+(define retry #f)
+
+(define factorial
+  (lambda (n)
+    (cond
+      [(= n 0) (call/cc (lambda (k)
+                          (set! retry k)
+                          1))]
+      [else (* n
+               (factorial (- n 1)))])))
+
+
+(define lwp-list '())
+
+(define lwp
+  (lambda (thunk)
+    (set! lwp-list (append lwp-list (list thunk))))) 
+
+(define start
+  (lambda ()
+    (let ([p (car lwp-list)])
+      (set! lwp-list (cdr lwp-list))
+      (p))))
+
+(define pause
+  (lambda ()
+    (call/cc
+     (lambda (k)
+       (lwp (lambda () (k #f)))
+       (start)))))
+
+(lwp (lambda () (let f () (pause) (display "h") (f))))
+;; (lwp (lambda () (let f () (pause) (display "e") (f))))
+;; (lwp (lambda () (let f () (pause) (display "y") (f))))
+;; (lwp (lambda () (let f () (pause) (display "!") (f))))
+;; (lwp (lambda () (let f () (pause) (newline) (f))))
+
 ;; https://cgi.soic.indiana.edu/~c311/lib/exe/fetch.php?media=cpslecture.scm
 
 
@@ -48,3 +103,11 @@
     (fact-cps n (lambda (v) v))))
 
 ;; TODO
+
+(define (duplicate pos lst)
+  (let dup ([i 0]
+            [lst lst])
+    (cond
+      [(= i pos) (cons (car lst) lst)]
+      [else (cons (car lst) (dup (+ i 1) (cdr lst)))])))
+
