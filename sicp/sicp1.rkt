@@ -280,6 +280,7 @@
 (define (close-enough? a b)
   (< (abs (- a b)) 0.001))
 
+
 (define (half-search f a b)
   (let ([ra (f a)]
         [rb (f b)])
@@ -289,3 +290,17 @@
       [(and (negative? rb) (positive? ra))
        (search f a b)]
       (else (error "no results")))))
+
+
+;; find fixed point
+
+(define tolerance 0.0000001)
+
+(define (fixed-point f first-guess)
+  (define (try guess)
+    (let ([next (f guess)])
+      (if (close-enough? next guess)
+      next
+      (try next))))
+  (try first-guess))
+
