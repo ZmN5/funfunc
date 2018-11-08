@@ -261,3 +261,31 @@
       [(divides? n i) i]
       [else (find-dividor (next-num i))]))
   (= n (find-dividor 2)))
+
+
+;; half search
+
+
+(define (search f positive-num negative-num)
+  (let ([mid-num (average  positive-num negative-num)])
+    (if (close-enough? positive-num negative-num)
+        mid-num
+        (let ([mid-res (f mid-num)])
+        (cond
+          [(negative? mid-res) (search f positive-num mid-num)]
+          [(positive? mid-res) (search f mid-num negative-num)]
+          [else mid-num])
+      ))))
+
+(define (close-enough? a b)
+  (< (abs (- a b)) 0.001))
+
+(define (half-search f a b)
+  (let ([ra (f a)]
+        [rb (f b)])
+    (cond
+      [(and (negative? ra) (positive? rb))
+       (search f b a)]
+      [(and (negative? rb) (positive? ra))
+       (search f a b)]
+      (else (error "no results")))))
