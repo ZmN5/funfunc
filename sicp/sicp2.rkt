@@ -166,3 +166,16 @@
          (map-square-tree x)
          (square x)))
    tree))
+
+;; 2.31
+
+(define (tree-map func tree)
+  (map
+   (lambda (x)
+     (if (pair? x)
+         (tree-map func x)
+         (func x)))
+   tree))
+
+(define (square-tree-v3 tree)
+  (tree-map square tree))
