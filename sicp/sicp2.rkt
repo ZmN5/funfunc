@@ -179,3 +179,53 @@
 
 (define (square-tree-v3 tree)
   (tree-map square tree))
+
+
+;; 2.32
+
+(define (subsets lst)
+  (if (null? lst)
+      (list '())
+      (let ([rest (subsets (cdr lst))])
+        (append rest (map (lambda (x)(cons (car lst) x )) rest)))))
+
+;; 2.33
+
+
+(define (accumulate p initial seq)
+  (if (null? seq)
+      initial
+      (p (car seq)
+         (accumulate p initial (cdr seq)))))
+
+(define (map-v1 p seq)
+  (accumulate (lambda (x y)
+                (cons (p x) y))
+              '()
+              seq))
+
+(define (append-v1 seq1 seq2)
+  (accumulate cons seq2 seq1))
+
+(define (length-v1 seq)
+  (accumulate (lambda (x y) (+ y 1))
+              0
+              seq))
+
+
+;; 2.34
+
+(define (honor-eval x coeff-seq)
+  (accumulate (lambda (this-coeff higher-terms) (+ this-coeff (* x higher-terms)))
+              0
+              coeff-seq))
+
+;; 2.35
+
+(define (count-leaves t)
+  (accumulate +
+              0
+              (map (lambda (subtree) (if (pair? subtree)
+                                          (count-leaves subtree)
+                                          1)) t)))
+
