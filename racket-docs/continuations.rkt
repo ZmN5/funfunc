@@ -78,13 +78,13 @@
 ;; https://cgi.soic.indiana.edu/~c311/lib/exe/fetch.php?media=cpslecture.scm
 
 
-(define rember4
-  (lambda (ls)
-    (cond
-      [(null? ls) '()]
-      [(= 4 (car ls))  (cdr ls)]
-      [else (cons (car ls)
-                  (rember4 (cdr ls)))])))
+;; (define rember4
+;;   (lambda (ls)
+;;     (cond
+;;       [(null? ls) '()]
+;;       [(= 4 (car ls))  (cdr ls)]
+;;       [else (cons (car ls)
+;;                   (rember4 (cdr ls)))])))
 
 ;; TODO
 
@@ -111,3 +111,40 @@
       [(= i pos) (cons (car lst) lst)]
       [else (cons (car lst) (dup (+ i 1) (cdr lst)))])))
 
+
+;; https://www.it.uu.se/edu/course/homepage/avfunpro/ht13/lectures/Racket-2-Continuations.pdf
+
+
+(define (sum lst cont)
+  (cond [(cons? lst)
+         (sum (cdr lst)
+              (lambda (acc)
+                (cont (+ (car lst) acc))))]
+        [else (cont 0)]))
+
+(define rember4
+  (lambda (lat k)
+    (cond
+      [(null? lat) (k '())]
+      [(= 4 (car lat)) (k (cdr lat))]
+      [else (rember4 (cdr lat)
+                      (lambda (x)
+                        (k (cons (car lat) x))))])))
+
+
+(define rember4*
+  (lambda (lat k)
+    (cond
+      [(null? lat) (k '())]
+      [(= 4 (car lat)) (rember4* (cdr lat)
+                                 (lambda (x)
+                                   (k x)))]
+      [else (rember4* (cdr lat)
+                     (lambda (x)
+                       (k (cons (car lat) x))))])))
+
+
+((call/cc
+  (lambda (cont) cont))
+ (lambda (x) "hi")
+  )
