@@ -54,6 +54,20 @@ object ListImpl {
     }
   }
 
+  def length[A](xs: List[A]): Int = {
+    (0 /: xs)((x, _) => x+1)
+  }
+
+  def foldLeft[A, B](xs: List[A], z: B)(f: (B, A) => B): B = {
+    def fl(r: B, ys: List[A]): B = {
+      ys match {
+        case Nil => r
+        case z :: zx => fl(f(r, z), zx)
+      }
+    }
+    fl(z, xs)
+  }
+
   def main(args: Array[String]): Unit = {
     assert(cdr(List(1,2,3,4)) == List(2,3,4))
     assert(setHead(List(2), 1) == List(1))
@@ -61,6 +75,8 @@ object ListImpl {
     assert(dropWhile(List(1,2,3,4), (a: Int) => a %2==0) == List(1, 3))
     assert(dropWhile2(List(1,2,3,4), (a: Int) => a %2==0) == List(1, 3))
     println(init(List(1,2,3,4)))
+    assert(length(List(1,2,3,4)) == 4)
+    print(foldLeft(List(1,2,3,4), 1)(_ * _))
   }
 
 }
