@@ -103,6 +103,36 @@ object ListImpl {
     foldLeft(xs, List[T]())(append)
   }
 
+  // 3.18
+  def map[A, B](xs: List[A])(f: A => B): List[B] = {
+    (xs :\ List[B]())((y, ys)=>f(y)::ys)
+  }
+
+  // 3.19
+  def filter[A](xs: List[A])(f: A => Boolean): List[A] = {
+    (xs :\ List[A]()){(y, ys) =>
+      if (f(y)) y::ys else ys
+    }
+  }
+
+  // 3.20
+  def flatMap[A, B](xs: List[A])(f: A=>List[B]): List[B] = {
+    (xs :\ List[B]())((y, ys) => f(y):::ys)
+  }
+
+  // 3.21
+  def filterByFlatMap[A](xs: List[A])(f: A => Boolean): List[A] = {
+    flatMap(xs)(y => if (f(y)) List(y) else Nil)
+  }
+
+  def zipWith[A, B, C](xs: List[A], ys: List[B])(f: (A, B) => C): List[C] = {
+    (xs, ys) match {
+      case (Nil, _) => Nil
+      case (_, Nil) => Nil
+      case (h1::t1, h2:: t2) => f(h1, h2)::zipWith(t1, t2)(f)
+    }
+  }
+
   def main(args: Array[String]): Unit = {
     assert(cdr(List(1,2,3,4)) == List(2,3,4))
     assert(setHead(List(2), 1) == List(1))
@@ -119,5 +149,10 @@ object ListImpl {
     assert(foldRight(List(1,2,3,4), 0)(_ + _) == 10)
     assert(append(List(1,2), List(3,4)) == List(1,2,3,4))
     assert(concat(List(List(1,2), List(3,4), List(5,6))) == List(1,2,3,4,5,6))
+    assert(map(List(1,2,3,4))(_ + 1) == List(2,3,4,5)) // 3.18
+    assert(filter(List(1,2,3,4))(_ % 2 == 0) == List(2,4)) // 3.19
+    assert(flatMap(List(1,2))(i => List(i, i)) == List(1,1,2,2)) // 3.20
+    assert(filterByFlatMap(List(1,2,3,4))(_ % 2 == 0) == List(2, 4)) // 3.21
+    assert(zipWith(List(1,2,3), List(1,2,3))(_ + _) == List(2,4,6))
   }
 }
