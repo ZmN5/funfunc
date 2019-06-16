@@ -133,6 +133,24 @@ object ListImpl {
     }
   }
 
+  // 3.24
+  @annotation.tailrec
+  def startWith[T](xs: List[T], prefix: List[T]): Boolean = {
+    (xs, prefix) match {
+      case (_, Nil) => true
+      case (h::t, h1::t1) if h==h1 => startWith(t, t1)
+      case _ => false
+    }
+  }
+  @annotation.tailrec
+  def hasSubSeq[T](sup: List[T], sub: List[T]): Boolean = {
+    sup match {
+      case Nil => sub == Nil
+      case _ if startWith(sup, sub) => true
+      case _::t  => hasSubSeq(t, sub)
+    }
+  }
+
   def main(args: Array[String]): Unit = {
     assert(cdr(List(1,2,3,4)) == List(2,3,4))
     assert(setHead(List(2), 1) == List(1))
@@ -154,5 +172,7 @@ object ListImpl {
     assert(flatMap(List(1,2))(i => List(i, i)) == List(1,1,2,2)) // 3.20
     assert(filterByFlatMap(List(1,2,3,4))(_ % 2 == 0) == List(2, 4)) // 3.21
     assert(zipWith(List(1,2,3), List(1,2,3))(_ + _) == List(2,4,6))
+    assert(hasSubSeq(List(1,2,3,4), List(3,4)) == true) // 3.24
+    assert(hasSubSeq(List(1,2,3,4), List(3,5)) == false) // 3.24
   }
 }
