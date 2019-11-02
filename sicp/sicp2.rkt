@@ -1,4 +1,4 @@
-#lang racket
+;; #lang racket
 
 ;; cons car cdr
 
@@ -7,7 +7,7 @@
     (cond
       [(= m 0) x]
       [(= m 1) y]
-      (else (error "must 0 or 1"))))
+      (else (error "must be 0 or 1"))))
   dispatch)
 
 (define (car-v1 z) (z 0))
@@ -237,3 +237,25 @@
       '()
       (cons (accumulate op init (map car seqs))
             (accumulate-n op init (map cdr seqs)))))
+
+;; 2.39
+
+(define (fold-left op initial seq)
+  (define (iter result rest)
+    (if (null? rest)
+        result
+        (iter (op result (car rest))
+              (cdr rest))))
+  (iter initial seq))
+
+(define (reverse-v1 seq)
+  (accumulate (lambda (x y)
+                (append y (list x)))
+              '()
+              seq))
+
+(define (reverse-v2 seq)
+  (fold-left (lambda (x y)
+               (cons y x))
+             '()
+             seq))
